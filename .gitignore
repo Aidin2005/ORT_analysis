@@ -1,0 +1,40 @@
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Python cache and bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# OS-specific metadata
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Office temporary lock files
+~$*
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Blackjack project files (Excluded from ORT repository)
+Blackjack*
+blackjack*
+blackjack_project/
+blackjack_project*/
+blackjack_proposal/
+blackjack_proposal*/
+
+# Local paper backup duplicates (Only canonical 'paper/' is tracked)
+paper 2/
+paper 3/
+paper 4/
