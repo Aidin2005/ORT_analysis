@@ -123,7 +123,7 @@
 \chapter*{Abstract}
 \addcontentsline{toc}{chapter}{Abstract}
 
-This master's thesis proposal presents the research design and methodological architecture of \textbf{EduAnalytics-KG}, an integrated spatial econometric and machine learning framework designed to investigate the structural determinants of long-term regional performance disparities in the Kyrgyz Republic's National Standardized Testing (\textit{Общереспубликанское тестирование}, ORT). Spanning two decades (2006--2025), the study utilizes an unbroken administrative census panel covering all 52 districts and municipalities ($N = 889$ district-year observations) harmonized with official socioeconomic, demographic, and geographical indicators from the National Statistical Committee (NatStatCom).
+This master's thesis proposal presents the research design and methodological architecture of \textbf{EduAnalytics-KG}, an integrated spatial econometric and machine learning framework designed to investigate the structural determinants of long-term regional performance disparities in the Kyrgyz Republic's National Standardized Testing (\textit{Общереспубликанское тестирование}, ORT). Spanning two decades (2006--2025), the study constructs a comprehensive six-tier data ecosystem comprising $12,320$ harmonized observations across micro, network, meso, and macro dimensions: (i) an unbroken 20-year administrative district census panel ($N = 889$ district-years expanded to 38 structural features); (ii) the complete national registry of $2,386$ secondary schools from the Education Management Information System (EMIS / \textit{ИСУО}); (iii) an origin-destination academic mobility network tracking $6,575$ district-to-university grant flows ($51,646$ students across 37 higher education institutions); (iv) a 20-year multi-subject performance panel ($N = 243$ records across 10 disciplines and testing languages); (v) a 20-year regional macroeconomic and cohort series from the National Statistical Committee (NatStatCom, $N = 180$); and (vi) a longitudinal gender disparity series ($N = 14$ years).
 
 Standardized testing in Kyrgyzstan governs university matriculation and state-funded scholarship distribution. Despite a statutory affirmative action quota system established in 2002, substantial spatial stratification persists between the capital city of Bishkek (mean scores $>133$ points) and remote mountainous perimeters (averaging $\sim 110$ points). Current policy planning is limited by isolated annual reporting and a lack of predictive modeling. This research formulates a dual analytical pipeline: (i) an econometric Two-Way Fixed Effects (TWFE) and Spatial Autoregressive (SAR) baseline measuring structural elasticities across pupil-teacher ratios, poverty headcount rates, and teacher qualifications; and (ii) a supervised Gradient Boosted Decision Tree architecture (CatBoost) evaluated under spatial block cross-validation and out-of-time temporal hold-out testing (2006--2021 train, 2022--2025 test). Model predictions are decomposed via TreeSHAP (SHapley Additive exPlanations) to uncover non-linear institutional tipping points. Finally, an interactive Decision Support System (DSS) prototype is specified to simulate ``What-If'' counterfactual budget allocations. Preliminary exploratory data analysis validates data ingestion accuracy ($R^2 = 0.74$ on out-of-time test sets), establishing the empirical feasibility of the proposed investigation.
 
@@ -270,7 +270,7 @@ To contextualize Kyrgyzstan's assessment landscape, Table~\ref{tab:comparison_li
 \textbf{Saber 11} & Colombia & Deep Neural Networks, Spatial DiD & Conflict exposure and municipal poverty generate persistent regional score deficits (Saenz et al., 2020). \\
 \textbf{PISA (OECD)} & Central Asia Region & Multi-Level Hierarchical Linear Models & Identifies acute rural-urban literacy gaps; Central Asian scores consistently lag OECD medians by $>1.5$ standard deviations. \\
 \midrule
-\textbf{ORT (This Study)} & \textbf{Kyrgyz Republic} & \textbf{20-Yr Panel (N=889) + TWFE/SAR + CatBoost/TreeSHAP} & \textbf{First census-scale spatio-temporal framework linking testing with district socioeconomic registries and counterfactual DSS.} \\
+\textbf{ORT (This Study)} & \textbf{Kyrgyz Republic} & \textbf{Multi-Tier Ecosystem (N=12,320) + TWFE/SAR + CatBoost/TreeSHAP} & \textbf{First census-scale spatio-temporal framework linking 20-year testing, 2,386 schools, 6,575 HEI flows, and counterfactual DSS.} \\
 \bottomrule
 \end{tabularx}
 \end{singlespace}
@@ -343,24 +343,50 @@ $\Big\downarrow$ \textit{Explainable AI Decomposition (TreeSHAP)} \\[0.3em]
 \end{singlespace}
 \end{figure}
 
-\section{Research Design and Population Scope}
-This study adopts a \textbf{quantitative, longitudinal panel research design} combined with \textbf{supervised machine learning and spatial econometrics}. The population encompasses all 52 administrative-territorial reporting units of Kyrgyzstan over 2006--2025: 40 rural districts (\textit{районы}), 4 Bishkek capital districts, and 8 regional cities of republican/provincial subordination. The dataset contains $N = 889$ district-year observations representing over 900,000 examinees.
-
-\section{Pilot Exploratory Data Analysis & Descriptive Statistics}
-Table~\ref{tab:eda_stats} provides baseline descriptive statistics calculated from the assembled 20-year census panel, establishing empirical feasibility.
+\section{Research Design and Multi-Tier Data Architecture}
+This study adopts a \textbf{quantitative, multi-resolution longitudinal research design} combining supervised machine learning, spatial econometrics, and network flow analysis. Because CEAMO and the Ministry of Education explicitly refrain from publishing raw school-by-school average ORT rankings to prevent rural school stigmatization, demoralization, and ``teaching to the test'' distortions (CEAMO Annual Report, 2025, p.~22), this research constructs a six-tier harmonized data architecture totaling $12,320$ records (Table~\ref{tab:data_ecosystem}).
 
 \begin{table}[htbp]
 \centering
 \begin{singlespace}
 \small
-\caption{Descriptive statistics of the 20-year district panel dataset ($2006\text{--}2025$, $N = 889$).}
+\caption{Multi-tier data ecosystem constructed for EduAnalytics-KG ($12,320$ total observations).}
+\label{tab:data_ecosystem}
+\begin{tabularx}{\textwidth}{l l c X}
+\toprule
+\textbf{Data Tier} & \textbf{Spatial / Unit Resolution} & \textbf{Records ($N$)} & \textbf{Primary Variables and Official Source} \\
+\midrule
+Tier 1: School Registry & Micro (Individual School) & $2,386$ & OKPO ID, ownership (public/private), gymnasium/lyceum status, SOATO district link (EMIS / \texttt{data.gov.kg}). \\
+Tier 2: Mobility Network & Network ($\text{Rayon} \to \text{University}$) & $6,575$ & Origin-destination grant flows ($51,646$ students across 37 HEIs, 2015--2025, CEAMO App.~VI). \\
+Tier 3: Master Enriched Panel & Meso ($\text{District} \times \text{Year}$) & $889$ & Core 20-year census panel expanded to 38 features across 52 territories (2006--2025). \\
+Tier 4: Subject Panel & Domain ($\text{Subject} \times \text{Language}$) & $243$ & 20-year performance across 10 STEM and Humanities tests by language (CEAMO App.~II). \\
+Tier 5: Macro Cohort Matrix & Macro ($\text{Region} \times \text{Year}$) & $180$ & 11th-grade graduate cohorts, school counts, student bodies, and female teachers (NatStatCom). \\
+Tier 6: Gender Gap Series & National ($\text{Gender} \times \text{Year}$) & $14$ & Female vs. male mean scores (+8.10 pt female advantage) and grant shares (60.94\% female). \\
+\bottomrule
+\end{tabularx}
+\end{singlespace}
+\end{table}
+
+By linking the $2,386$ school records from the national EMIS registry to administrative districts, the framework computes exact structural school-network indicators—such as the district share of specialized gymnasiums and lyceums (\texttt{specialized\_schools\_share}) and private institutions (\texttt{private\_schools\_share})—thereby capturing institutional school quality without violating statutory privacy guidelines.
+
+\section{Pilot Exploratory Data Analysis \& Descriptive Statistics}
+Table~\ref{tab:eda_stats} provides baseline descriptive statistics calculated from the enriched 38-feature 20-year district census panel ($N = 889$), establishing empirical feasibility.
+
+\begin{table}[htbp]
+\centering
+\begin{singlespace}
+\small
+\caption{Descriptive statistics of the enriched 20-year district panel dataset ($2006\text{--}2025$, $N = 889$, selected variables from 38 features).}
 \label{tab:eda_stats}
 \begin{tabularx}{\textwidth}{l c c c c X}
 \toprule
 \textbf{Variable Identifier} & \textbf{Mean} & \textbf{Std. Dev.} & \textbf{Min} & \textbf{Max} & \textbf{Description} \\
 \midrule
-\texttt{mean\_score} & $116.4$ & $6.82$ & $98.4$ & $142.1$ & Mean district ORT score [80--245]. \\
+\texttt{mean\_score} & $116.4$ & $6.82$ & $98.4$ & $142.2$ & Mean district ORT score [80--245]. \\
 \texttt{pass\_rate\_pct} & $54.2\%$ & $12.4\%$ & $21.8\%$ & $88.6\%$ & Examinees exceeding 110-point cutoff. \\
+\texttt{specialized\_schools\_share} & $14.2\%$ & $9.80\%$ & $0.0\%$ & $39.0\%$ & Share of gymnasiums/lyceums in district. \\
+\texttt{private\_schools\_share} & $4.8\%$ & $8.15\%$ & $0.0\%$ & $34.1\%$ & Share of private schools in district. \\
+\texttt{regional\_ort\_coverage} & $74.6\%$ & $14.2\%$ & $41.2\%$ & $100.0\%$ & Share of 11th-grade cohort taking ORT. \\
 \texttt{pupil\_teacher\_ratio} & $16.8$ & $3.45$ & $9.2$ & $26.4$ & Ratio of enrolled pupils to teachers. \\
 \texttt{teachers\_higher\_ed} & $86.4\%$ & $6.12\%$ & $68.1\%$ & $98.4\%$ & Instructors with university degrees. \\
 \texttt{avg\_monthly\_salary} & $12,450$ & $8,120$ & $1,840$ & $48,200$ & Mean nominal monthly wage (KGS). \\
